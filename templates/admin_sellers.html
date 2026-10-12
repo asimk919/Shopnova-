@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopNova Admin</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f6fb;color:#17233c;padding:16px}
+main{max-width:800px;margin:auto}
+article{background:white;padding:18px;margin:14px 0;border-radius:12px}
+button{padding:10px 16px;border:0;border-radius:7px;margin:5px;cursor:pointer}
+.approve{background:#176b43;color:white}
+.reject{background:#a62828;color:white}
+</style>
+</head>
+<body>
+<main>
+<h1>ShopNova — Seller Applications</h1>
+{% for message in get_flashed_messages() %}
+<p>{{ message }}</p>
+{% endfor %}
+{% for application in applications %}
+<article>
+{% set applicant = users.get(application.user_id) %}
+<h3>{{ applicant.name if applicant else "Unknown user" }}</h3>
+<p>Email: {{ applicant.email if applicant else "Unavailable" }}</p>
+<p>Status: <strong>{{ application.status|capitalize }}</strong></p>
+{% if application.status == "pending" %}
+<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="application_id" value="{{ application.id }}">
+<button class="approve" name="action" value="approve">Approve Seller</button>
+<button class="reject" name="action" value="reject">Reject</button>
+</form>
+{% endif %}
+</article>
+{% else %}
+<p>Abhi koi seller application nahi hai.</p>
+{% endfor %}
+<p><a href="/">ShopNova homepage</a></p>
+</main>
+</body>
+</html>

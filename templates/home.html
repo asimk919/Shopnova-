@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopNova | Premium Online Store</title>
+<style>
+:root {
+  --navy: #101c36;
+  --blue: #244a86;
+  --bg: #f5f7fb;
+  --white: #fff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+}
+header {
+  background: var(--navy);
+  color: white;
+  padding: 18px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.logo { font-size: 25px; font-weight: 800; }
+.logo span { color: #78b7ff; }
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 15px;
+}
+.hero {
+  padding: 48px 6%;
+  background: linear-gradient(120deg,#101c36,#284b80);
+  color: white;
+}
+.hero h1 { font-size: clamp(32px,6vw,52px); margin: 0 0 12px; }
+.hero p { color: #e0e8f5; line-height: 1.7; }
+.search {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  padding: 14px;
+  border: 1px solid #d7dfeb;
+  border-radius: 10px;
+  margin-top: 24px;
+  font-size: 16px;
+}
+main { padding: 30px 5%; }
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(155px,1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+.card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px #1023440b;
+  border: 1px solid #e7ebf2;
+}
+.product-image {
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+  background: #e8edf5;
+}
+.card-content { padding: 14px; }
+.card h3 { font-size: 16px; margin: 4px 0 10px; }
+.price { font-size: 19px; font-weight: 800; }
+button, .button {
+  background: var(--navy);
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.card button { width: 100%; margin-top: 12px; }
+button:hover, .button:hover { background: var(--blue); }
+.payments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+  gap: 15px;
+  margin-top: 24px;
+}
+.payments article {
+  background: white;
+  border: 1px solid #e1e7f0;
+  border-radius: 13px;
+  padding: 20px;
+}
+footer {
+  margin-top: 35px;
+  background: var(--navy);
+  color: white;
+  text-align: center;
+  padding: 25px;
+}
+.small { color: #68758b; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Shop<span>Nova</span></div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="#products">Products</a>
+    <a href="/cart">Cart 🛒</a>
+    {% if current_user.is_authenticated and current_user.role == "seller" %}
+    <a href="/seller">Seller Dashboard</a>
+    {% endif %}
+    {% if current_user.is_authenticated %}
+    <form action="/logout" method="POST" style="display:inline;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit">Logout</button>
+    </form>
+    {% else %}
+    <a href="/login">Login</a>
+    {% endif %}
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Discover Your Next Favorite.</h1>
+  <p>Explore everyday essentials, fashion, electronics and more.</p>
+  <input class="search" id="search"
+    placeholder="Search products..."
+    aria-label="Search products">
+</section>
+
+<main>
+  <div class="section-title" id="products">
+    <h2>Featured Products</h2>
+    <span>Quality shopping, made simple.</span>
+  </div>
+
+  <div class="products" id="product-grid">
+    {% for product in products %}
+    <article class="card" data-name="{{ product.name|lower }}">
+      <img class="product-image"
+        src="{{ product.image }}"
+        alt="{{ product.name }}"
+        onerror="this.style.visibility='hidden'">
+      <div class="card-content">
+        <h3>{{ product.name }}</h3>
+        <p class="small">{{ product.category }}</p>
+        <div class="price">Rs. {{ "%.2f"|format(product.price) }}</div>
+        <form action="{{ url_for('add', product_id=product.id) }}" method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit">Add to Cart</button>
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <h2 style="margin-top:42px">Payment Options</h2>
+  <div class="payments">
+    <article>
+      <h3>JazzCash</h3>
+      <p>Manual payment instructions will be shown at checkout.</p>
+    </article>
+    <article>
+      <h3>Easypaisa</h3>
+      <p>Manual payment instructions will be shown at checkout.</p>
+    </article>
+    <article>
+      <h3>Cash on Delivery</h3>
+      <p>Pay when your order arrives, where available.</p>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="logo">Shop<span>Nova</span></div>
+  <p>Smart shopping. Simple living.</p>
+  <p class="small">Contact and store policies can be added here.</p>
+</footer>
+
+<script>
+const search = document.getElementById("search");
+search.addEventListener("input", () => {
+  const query = search.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.display = card.dataset.name.includes(query)
+      ? "" : "none";
+  });
+});
+</script>
+</body>
+</html>

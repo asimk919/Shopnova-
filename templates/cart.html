@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Cart | ShopNova</title>
+<style>
+body{font-family:Arial;background:#f3f6fc;color:#172033;margin:0;padding:20px}
+main{max-width:650px;margin:auto}.item{background:white;padding:16px;border-radius:12px;margin:12px 0}
+button{padding:11px 14px;background:#2858d9;color:white;border:0;border-radius:8px;cursor:pointer}
+.remove{background:#b42318}.total{font-size:22px;font-weight:bold}
+</style>
+</head>
+<body>
+<main>
+<h1>🛒 ShopNova Cart</h1>
+<a href="/">← Continue shopping</a>
+{% for msg in get_flashed_messages() %}<p>{{ msg }}</p>{% endfor %}
+{% for item in items %}
+<div class="item">
+<h3>{{ item.product.name }}</h3>
+<p>Quantity: {{ item.qty }}</p>
+<p>Price: Rs. {{ item.product.price }}</p>
+<p>Subtotal: Rs. {{ item.subtotal }}</p>
+<form action="{{ url_for('remove', product_id=item.product.id) }}" method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button class="remove" type="submit">Remove</button>
+</form>
+</div>
+{% else %}
+<p>Your cart is empty.</p>
+{% endfor %}
+{% if items %}
+<p class="total">Total: Rs. {{ total }}</p>
+<p>Delivery charges will be confirmed by the seller.</p>
+<form action="{{ url_for('order') }}" method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Order on WhatsApp (login required)</button>
+</form>
+{% endif %}
+</main>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Cart | ShopNova</title>
+<style>
+body{font-family:Arial;background:#f5f7fb;color:#101c36;padding:20px}
+main{max-width:700px;margin:auto}
+.item{background:white;padding:16px;margin:12px 0;border-radius:12px}
+a,button{background:#101c36;color:white;padding:12px;border:0;border-radius:8px;text-decoration:none;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>ShopNova — Your Cart</h1>
+{% for message in get_flashed_messages() %}<p>{{ message }}</p>{% endfor %}
+{% if items %}
+{% for item in items %}
+<div class="item">
+<h3>{{ item.name }}</h3>
+<p>Quantity: {{ item.quantity }}</p>
+<p>Subtotal: Rs. {{ "%.2f"|format(item.subtotal) }}</p>
+<form method="post" action="/cart/remove/{{ item.id }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Remove</button>
+</form>
+</div>
+{% endfor %}
+<h2>Total: Rs. {{ "%.2f"|format(total) }}</h2>
+<a href="/checkout">Proceed to Checkout</a>
+{% else %}
+<p>Your cart is empty.</p>
+<a href="/">Continue Shopping</a>
+{% endif %}
+</main>
+</body>
+</html>

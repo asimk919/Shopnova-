@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.db
+*.sqlite
+*.backup*
+*.before*
+*.bak
+.env
+hosting_backup/
+instance/
