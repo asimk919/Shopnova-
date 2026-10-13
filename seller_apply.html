@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Become a Seller | ShopNova</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f6fb;padding:20px;color:#17233c}
+main{max-width:500px;margin:30px auto;background:white;padding:24px;border-radius:14px}
+button{background:#142746;color:white;border:0;border-radius:8px;padding:13px;width:100%}
+a{color:#2459a9}
+</style>
+</head>
+<body>
+<main>
+<h1>Become a ShopNova Seller</h1>
+{% for message in get_flashed_messages() %}
+<p>{{ message }}</p>
+{% endfor %}
+{% if application %}
+<p>Application status: <strong>{{ application.status|capitalize }}</strong></p>
+{% endif %}
+<p>Seller banne ke liye neeche button dabayein. Aapki request admin approval ke liye bheji jayegi.</p>
+<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Apply to Become a Seller</button>
+</form>
+<p><a href="/">ShopNova homepage</a></p>
+</main>
+</body>
+</html>

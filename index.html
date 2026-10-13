@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ShopNova | Online Store</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fb;color:#172033;font-family:Arial,sans-serif}
+header{background:#111d36;color:white;padding:17px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+a{color:inherit;text-decoration:none}.logo{font-size:25px;font-weight:800;color:#9bbaff}
+nav{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.hero{padding:35px 5%;background:linear-gradient(120deg,#dce8ff,#f8faff)}
+.hero h1{font-size:34px;margin:0 0 10px}.search{display:flex;gap:8px;margin-top:18px;max-width:550px}
+input{padding:12px;border:1px solid #ccd4e2;border-radius:9px;font-size:16px;min-width:0;flex:1}
+button,.btn{border:0;border-radius:9px;background:#2858d9;color:white;padding:11px 15px;font-size:15px;cursor:pointer;display:inline-block}
+main{padding:25px 5%}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:17px}
+.card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 5px 20px #1b2b4910;padding-bottom:14px}
+.card img{width:100%;height:165px;object-fit:cover;background:#e8edf6}
+.card h3,.card p,.card form{margin:10px 12px}.price{color:#2858d9;font-weight:bold;font-size:18px}.category{color:#64748b;font-size:13px}
+.flash{background:#e0f2e8;padding:12px;border-radius:8px;margin:10px 0}
+footer{text-align:center;padding:25px;color:#667085}
+</style>
+</head>
+<body>
+<header>
+<a class="logo" href="/">ShopNova</a>
+<nav>
+{% if current_user.is_authenticated %}
+<span>Hi, {{ current_user.name }}</span>
+<form action="{{ url_for('logout') }}" method="post" style="display:inline">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Logout</button>
+</form>
+{% else %}
+<a href="{{ url_for('login') }}">Login</a>
+<a href="{{ url_for('register') }}">Sign up</a>
+{% endif %}
+<a href="{{ url_for('view_cart') }}">🛒 Cart ({{ cart_count }})</a>
+</nav>
+</header>
+<section class="hero">
+<h1>Find something you love.</h1>
+<p>Discover everyday essentials at ShopNova.</p>
+<form class="search" action="/" method="get">
+<input name="q" value="{{ search }}" placeholder="Search products or categories">
+<button>Search</button>
+</form>
+</section>
+<main>
+{% for msg in get_flashed_messages() %}
+<div class="flash">{{ msg }}</div>
+{% endfor %}
+<h2>Featured Products</h2>
+<div class="grid">
+{% for p in products %}
+<article class="card">
+<img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy">
+<p class="category">{{ p.category }}</p>
+<h3>{{ p.name }}</h3>
+<p class="price">Rs. {{ p.price }}</p>
+<form action="{{ url_for('add', product_id=p.id) }}" method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Add to cart</button>
+</form>
+</article>
+{% else %}
+<p>No products found. Try another search.</p>
+{% endfor %}
+</div>
+</main>
+<footer>ShopNova · Demo online store · Prices are sample prices</footer>
+</body>
+</html>

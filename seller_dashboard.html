@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seller Dashboard | ShopNova</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f6fb;color:#17233c;padding:16px}
+main{max-width:700px;margin:auto}
+section{background:white;padding:20px;margin-bottom:18px;border-radius:14px}
+input{display:block;width:100%;box-sizing:border-box;padding:12px;margin:8px 0 16px;border:1px solid #ccd5e3;border-radius:8px}
+button{background:#142746;color:white;padding:13px;border:0;border-radius:8px;width:100%}
+img{max-width:100px;max-height:100px;object-fit:contain}
+a{color:#2459a9}
+</style>
+</head>
+<body>
+<main>
+<h1>ShopNova Seller Dashboard</h1>
+{% for message in get_flashed_messages() %}
+<p>{{ message }}</p>
+{% endfor %}
+
+<section>
+<h2>Add a product</h2>
+<form method="post" enctype="multipart/form-data">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<label>Product name</label>
+<input name="name" maxlength="120" required>
+
+<label>Price (PKR)</label>
+<input name="price" type="number" min="0.01" max="100000000" step="0.01" required>
+
+<label>Category</label>
+<input name="category" maxlength="80" placeholder="Electronics, Fashion, Home..." required>
+
+<label>Product image (PNG, JPG, WEBP)</label>
+<input name="image" type="file" accept=".png,.jpg,.jpeg,.webp" required>
+
+<button type="submit">Save Product</button>
+</form>
+<p><a href="/">Visit ShopNova homepage</a></p>
+</section>
+
+<section>
+<h2>Your uploaded products ({{ products|length }})</h2>
+{% for product in products %}
+<div>
+<img src="{{ product.image }}" alt="Product image">
+<h3>{{ product.name }}</h3>
+<p>Price: Rs. {{ "%.2f"|format(product.price) }}</p>
+<p>Category: {{ product.category }}</p>
+</div>
+<hr>
+{% else %}
+<p>Abhi aapne koi product add nahi kiya.</p>
+{% endfor %}
+</section>
+</main>
+</body>
+</html>

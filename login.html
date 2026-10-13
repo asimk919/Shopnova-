@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login | ShopNova</title>
+<style>
+body{font-family:Arial;background:#f3f6fc;margin:0;padding:22px}
+.box{max-width:420px;margin:30px auto;background:white;padding:24px;border-radius:15px;box-shadow:0 8px 28px #17203312}
+input{width:100%;padding:13px;margin:9px 0;border:1px solid #ccd4e2;border-radius:8px;font-size:16px}
+button,.btn{display:block;width:100%;padding:13px;border:0;border-radius:8px;background:#2858d9;color:white;text-align:center;font-size:16px;text-decoration:none;cursor:pointer}
+.google{background:#202938;margin-top:10px}.msg{background:#fff0e5;padding:10px;border-radius:7px}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>Welcome back</h1>
+<p>Login to your ShopNova account.</p>
+{% for msg in get_flashed_messages() %}<p class="msg">{{ msg }}</p>{% endfor %}
+<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Email address</label>
+<input type="email" name="email" required autocomplete="email">
+<label>Password</label>
+<input type="password" name="password" required autocomplete="current-password">
+<button type="submit">Login</button>
+</form>
+<a class="btn google" href="{{ url_for('google_login') }}">Continue with Google</a>
+<p>New here? <a href="{{ url_for('register') }}">Create account</a></p>
+<p><a href="{{ url_for('home') }}">← Back to store</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout | ShopNova</title>
+<style>
+body{font-family:Arial;background:#f5f7fb;color:#101c36;padding:20px}
+main{max-width:600px;margin:auto;background:white;padding:22px;border-radius:15px}
+input,textarea,select{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ccd5e3;border-radius:8px;box-sizing:border-box}
+button{background:#101c36;color:white;padding:14px;border:0;border-radius:8px;width:100%}
+</style>
+</head>
+<body>
+<main>
+<h1>ShopNova Checkout</h1>
+{% for message in get_flashed_messages() %}<p>{{ message }}</p>{% endfor %}
+<h3>Order total: Rs. {{ "%.2f"|format(total) }}</h3>
+
+<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<label>Full name</label>
+<input name="customer" required maxlength="100">
+
+<label>Country</label>
+<select name="country" required>
+<option value="">Select country</option>
+<option>Pakistan</option>
+<option>India</option>
+<option>United Arab Emirates</option>
+<option>Saudi Arabia</option>
+<option>United Kingdom</option>
+<option>United States</option>
+<option>Canada</option>
+<option>Australia</option>
+<option>Bangladesh</option>
+<option>Qatar</option>
+<option>Oman</option>
+<option>Kuwait</option>
+<option>Turkey</option>
+<option>Malaysia</option>
+<option>Other</option>
+</select>
+
+<label>Phone country code</label>
+<select name="phone_code" required>
+<option value="+92">Pakistan (+92)</option>
+<option value="+91">India (+91)</option>
+<option value="+971">UAE (+971)</option>
+<option value="+966">Saudi Arabia (+966)</option>
+<option value="+44">United Kingdom (+44)</option>
+<option value="+1">USA/Canada (+1)</option>
+<option value="+880">Bangladesh (+880)</option>
+<option value="+974">Qatar (+974)</option>
+<option value="+968">Oman (+968)</option>
+<option value="+965">Kuwait (+965)</option>
+<option value="+61">Australia (+61)</option>
+<option value="+60">Malaysia (+60)</option>
+</select>
+
+<label>Phone number (country code ke baghair)</label>
+<input name="phone" required maxlength="25" type="tel">
+
+<label>Province / State</label>
+<input name="province" required maxlength="100">
+
+<label>City</label>
+<input name="city" required maxlength="100">
+
+<label>Street address / House number</label>
+<textarea name="address" required maxlength="500"></textarea>
+
+<label>Postal / ZIP code</label>
+<input name="postal_code" required maxlength="20">
+
+<label>Payment method</label>
+<select name="payment_method" id="method" required>
+<option value="JazzCash">JazzCash — manual payment</option>
+<option value="Easypaisa">Easypaisa — manual payment</option>
+<option value="COD">Cash on Delivery</option>
+</select>
+
+<div id="manual">
+<p>Manual payment sirf store ke verified payment details ke zariye karein.</p>
+<label>Transaction reference</label>
+<input name="transaction_ref" maxlength="100">
+</div>
+
+<button type="submit">Place Order</button>
+</form>
+<p><a href="/cart">Back to cart</a></p>
+</main>
+<script>
+const method=document.getElementById("method");
+const manual=document.getElementById("manual");
+const ref=document.querySelector('[name="transaction_ref"]');
+function updatePayment(){
+ const isManual=method.value!=="COD";
+ manual.style.display=isManual?"block":"none";
+ ref.required=isManual;
+}
+method.addEventListener("change",updatePayment);
+updatePayment();
+</script>
+</body>
+</html>

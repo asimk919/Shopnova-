@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order Received | ShopNova</title>
+<style>
+body{font-family:Arial;background:#f5f7fb;color:#101c36;padding:25px;text-align:center}
+main{background:white;max-width:500px;margin:40px auto;padding:28px;border-radius:16px}
+a{background:#101c36;color:white;padding:13px 20px;border-radius:8px;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Thank you for shopping!</h1>
+<p>Your order has been recorded.</p>
+<h2>Order #{{ order_id }}</h2>
+<p>Total: Rs. {{ "%.2f"|format(total) }}</p>
+<p>Payment method: {{ method }}</p>
+<p>Manual payments remain unverified until checked by the store.</p>
+<a href="/">Continue Shopping</a>
+</main>
+</body>
+</html>

@@ -373,6 +373,7 @@ def admin_sellers():
         if not application:
             flash("Application nahi mili.")
         elif action not in ("approve", "reject"):
+
             flash("Invalid action.")
         else:
             applicant = db.session.get(User, application.user_id)
