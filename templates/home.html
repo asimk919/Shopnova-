@@ -205,3 +205,8 @@ search.addEventListener("input", () => {
 </script>
 </body>
 </html>
+{% for p in products %}
+{{ p.name }}
+{{ p.category }}
+Rs. {{ p.price }}
+{% endfor %}
